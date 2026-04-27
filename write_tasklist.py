@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import os
+
+content = r'''import { useState } from 'react'
 
 function TaskList({ tasks, allTasks, onToggleComplete, onDeleteTask, onEditTask, onToggleSubtask, darkMode }) {
   const [editingId, setEditingId] = useState(null)
@@ -133,7 +135,6 @@ function TaskList({ tasks, allTasks, onToggleComplete, onDeleteTask, onEditTask,
                   <button onClick={() => saveEdit(task.id)} className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">Save</button>
                   <button onClick={cancelEdit} className="px-3 py-1 bg-gray-500 text-white text-sm rounded hover:bg-gray-600">Cancel</button>
                 </div>
-              </div>
             ) : (
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
@@ -163,7 +164,6 @@ function TaskList({ tasks, allTasks, onToggleComplete, onDeleteTask, onEditTask,
                       Delete
                     </button>
                   </div>
-                </div>
                 {task.description && (
                   <p className={'ml-8 text-sm ' + mutedClass}>{task.description}</p>
                 )}
@@ -216,3 +216,8 @@ function TaskList({ tasks, allTasks, onToggleComplete, onDeleteTask, onEditTask,
 }
 
 export default TaskList
+'''
+
+with open('src/components/TaskList.jsx', 'w', encoding='utf-8') as f:
+    f.write(content)
+print('Done')

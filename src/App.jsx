@@ -1,33 +1,39 @@
-import { useCallback } from 'react'
+import { useCallback, useState, useMemo } from 'react'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import TaskForm from './components/TaskForm'
 import TaskList from './components/TaskList'
 import ProgressTracker from './components/ProgressTracker'
 import TaskHistory from './components/TaskHistory'
+import TaskFilter from './components/TaskFilter'
+import DarkModeToggle from './components/DarkModeToggle'
+import ExportImport from './components/ExportImport'
 
 /**
  * App Component - Main Application Container
  * 
- * Architecture:
+ * Features:
  * - State managed via useLocalStorage hook for persistence
- * - Callbacks defined as named functions (not inline) for testability
- * - Clean separation of concerns: App handles state, components handle UI
- * 
- * localStorage Sync Explanation:
- * The useLocalStorage hook handles all localStorage operations.
- * 1. On initial mount, it checks localStorage for existing tasks.
- * 2. If found, it parses the JSON and sets the initial state.
- * 3. If not found, it uses the default empty array.
- * 4. A useEffect watches the tasks state and writes to localStorage on every change.
- * 5. This ensures data persists across browser sessions without manual intervention.
+ * - Dark mode with localStorage persistence
+ * - Search, filter, and sort tasks
+ * - Inline editing, subtasks, tags, due dates
+ * - Export/Import JSON backup
  */
 function App() {
   // Use custom hook for localStorage persistence
   const [tasks, setTasks] = useLocalStorage('taskbuddy-tasks', [])
+  const [darkMode, setDarkMode] = useLocalStorage('taskbuddy-darkmode', false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterPriority, setFilterPriority] = useState('all')
+  const [filterCategory, setFilterCategory] = useState('all')
+  const [sortBy, setSortBy] = useState('createdAt')
+
+  // Toggle dark mode
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode((prev) => !prev)
+  }, [setDarkMode])
 
   /**
    * Adds a new task to the task list.
-   * Validation is handled in the TaskForm component before calling this.
    */
   const handleAddTask = useCallback(function addTask(newTask) {
     setTasks((prevTasks) => [...prevTasks, newTask])
@@ -35,7 +41,6 @@ function App() {
 
   /**
    * Toggles a task's completion status.
-   * Moves task between active list and history.
    */
   const handleToggleComplete = useCallback(function toggleComplete(taskId) {
     setTasks((prevTasks) =>
@@ -47,7 +52,6 @@ function App() {
 
   /**
    * Deletes a task from the active list.
-   * Note: Completed tasks use permanentDelete instead.
    */
   const handleDeleteTask = useCallback(function deleteTask(taskId) {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId))
@@ -71,41 +75,152 @@ function App() {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId))
   }, [setTasks])
 
+  /**
+   * Edits an existing task.
+   */
+  const handleEditTask = useCallback(function editTask(taskId, updatedFields) {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, ...updatedFields } : task
+      )
+    )
+  }, [setTasks])
+
+  /**
+   * Toggles a subtask's completion status.
+   */
+  const handleToggleSubtask = useCallback(function toggleSubtask(taskId, subtaskId) {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id !== taskId) return task
+        return {
+          ...task,
+          subtasks: task.subtasks?.map((st) =>
+            st.id === subtaskId ? { ...st, completed: !st.completed } : st
+          ) || [],
+        }
+      })
+    )
+  }, [setTasks])
+
+  /**
+   * Imports tasks from JSON.
+   */
+  const handleImportTasks = useCallback(function importTasks(importedTasks) {
+    setTasks(importedTasks)
+  }, [setTasks])
+
+  // Filtered and sorted tasks
+  const filteredTasks = useMemo(() => {
+    let result = tasks
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter((task) =>
+        task.name.toLowerCase().includes(query) ||
+        task.description?.toLowerCase().includes(query) ||
+        task.tags?.some((tag) => tag.toLowerCase().includes(query))
+      )
+    }
+
+    // Priority filter
+    if (filterPriority !== 'all') {
+      result = result.filter((task) => task.priority === filterPriority)
+    }
+
+    // Category filter
+    if (filterCategory !== 'all') {
+      result = result.filter((task) => task.category === filterCategory)
+    }
+
+    // Sorting
+    result = [...result].sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name)
+        case 'priority':
+          const priorityOrder = { high: 3, medium: 2, low: 1 }
+          return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0)
+        case 'dueDate':
+          if (!a.dueDate) return 1
+          if (!b.dueDate) return -1
+          return new Date(a.dueDate) - new Date(b.dueDate)
+        case 'createdAt':
+        default:
+          return new Date(b.createdAt) - new Date(a.createdAt)
+      }
+    })
+
+    return result
+  }, [tasks, searchQuery, filterPriority, filterCategory, sortBy])
+
+  const activeTasks = filteredTasks.filter((task) => !task.completed)
+  const completedTasks = filteredTasks.filter((task) => task.completed)
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className={`min-h-screen py-8 px-4 transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
       {/* Header */}
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-primary-700 mb-2">
-          TaskBuddy
-        </h1>
-        <p className="text-gray-600">Your personal task management companion</p>
+        <div className="flex justify-center items-center gap-4 mb-2">
+          <h1 className={`text-4xl font-bold ${darkMode ? 'text-primary-400' : 'text-primary-700'}`}>
+            TaskBuddy
+          </h1>
+          <DarkModeToggle darkMode={darkMode} onToggle={toggleDarkMode} />
+        </div>
+        <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+          Your personal task management companion
+        </p>
       </header>
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto">
-        {/* Progress Tracker - Shows completion percentage */}
-        <ProgressTracker tasks={tasks} />
+        {/* Progress Tracker */}
+        <ProgressTracker tasks={tasks} darkMode={darkMode} />
 
-        {/* Task Form - Add new tasks */}
-        <TaskForm tasks={tasks} onAddTask={handleAddTask} />
+        {/* Export / Import */}
+        <ExportImport tasks={tasks} onImport={handleImportTasks} darkMode={darkMode} />
+
+        {/* Task Form */}
+        <TaskForm tasks={tasks} onAddTask={handleAddTask} darkMode={darkMode} />
+
+        {/* Task Filter & Sort */}
+        <TaskFilter
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          filterPriority={filterPriority}
+          onFilterPriorityChange={setFilterPriority}
+          filterCategory={filterCategory}
+          onFilterCategoryChange={setFilterCategory}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          darkMode={darkMode}
+        />
 
         {/* Active Tasks List */}
         <TaskList
-          tasks={tasks}
+          tasks={activeTasks}
+          allTasks={tasks}
           onToggleComplete={handleToggleComplete}
           onDeleteTask={handleDeleteTask}
+          onEditTask={handleEditTask}
+          onToggleSubtask={handleToggleSubtask}
+          darkMode={darkMode}
         />
 
-        {/* Task History - Completed tasks */}
+        {/* Task History */}
         <TaskHistory
-          tasks={tasks}
+          tasks={completedTasks}
+          allTasks={tasks}
           onRestoreTask={handleRestoreTask}
           onPermanentDelete={handlePermanentDelete}
+          onEditTask={handleEditTask}
+          darkMode={darkMode}
         />
       </main>
 
       {/* Footer */}
-      <footer className="text-center mt-12 text-gray-500 text-sm">
+      <footer className={`text-center mt-12 text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
         <p>TaskBuddy - Built with React, Tailwind CSS & Vitest</p>
       </footer>
     </div>
