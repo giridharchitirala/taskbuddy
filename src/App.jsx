@@ -6,7 +6,6 @@ import ProgressTracker from './components/ProgressTracker'
 import TaskHistory from './components/TaskHistory'
 import TaskFilter from './components/TaskFilter'
 import DarkModeToggle from './components/DarkModeToggle'
-import ExportImport from './components/ExportImport'
 
 /**
  * App Component - Main Application Container
@@ -16,7 +15,6 @@ import ExportImport from './components/ExportImport'
  * - Dark mode with localStorage persistence
  * - Search, filter, and sort tasks
  * - Inline editing, subtasks, tags, due dates
- * - Export/Import JSON backup
  */
 function App() {
   // Use custom hook for localStorage persistence
@@ -103,13 +101,6 @@ function App() {
     )
   }, [setTasks])
 
-  /**
-   * Imports tasks from JSON.
-   */
-  const handleImportTasks = useCallback(function importTasks(importedTasks) {
-    setTasks(importedTasks)
-  }, [setTasks])
-
   // Filtered and sorted tasks
   const filteredTasks = useMemo(() => {
     let result = tasks
@@ -177,9 +168,6 @@ function App() {
       <main className="max-w-2xl mx-auto">
         {/* Progress Tracker */}
         <ProgressTracker tasks={tasks} darkMode={darkMode} />
-
-        {/* Export / Import */}
-        <ExportImport tasks={tasks} onImport={handleImportTasks} darkMode={darkMode} />
 
         {/* Task Form */}
         <TaskForm tasks={tasks} onAddTask={handleAddTask} darkMode={darkMode} />
