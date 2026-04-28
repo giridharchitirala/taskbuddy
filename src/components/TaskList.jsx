@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function TaskList({ tasks, allTasks, onToggleComplete, onDeleteTask, onEditTask, onToggleSubtask, darkMode }) {
+function TaskList({ tasks, allTasks, onToggleComplete, onDeleteTask, onEditTask, onToggleSubtask, onPinTask, selectedTaskIds, onToggleSelect, darkMode }) {
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editPriority, setEditPriority] = useState('medium')
@@ -138,6 +138,15 @@ function TaskList({ tasks, allTasks, onToggleComplete, onDeleteTask, onEditTask,
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 flex-1">
+                    {onToggleSelect && (
+                      <input
+                        type="checkbox"
+                        checked={selectedTaskIds?.includes(task.id) || false}
+                        onChange={() => onToggleSelect(task.id)}
+                        className="w-4 h-4 rounded cursor-pointer"
+                        aria-label={'Select ' + task.name}
+                      />
+                    )}
                     <input
                       type="checkbox"
                       checked={task.completed}
@@ -149,6 +158,15 @@ function TaskList({ tasks, allTasks, onToggleComplete, onDeleteTask, onEditTask,
                     <span className={'flex-1 ' + textClass}>{task.name}</span>
                   </div>
                   <div className="flex gap-1">
+                    {onPinTask && (
+                      <button
+                        onClick={() => onPinTask(task.id)}
+                        className={'px-2 py-1 text-sm rounded-md transition-colors ' + (task.pinned ? 'text-yellow-500' : darkMode ? 'text-gray-500 hover:text-yellow-400 hover:bg-gray-700' : 'text-gray-400 hover:text-yellow-600 hover:bg-gray-100')}
+                        title={task.pinned ? 'Unpin task' : 'Pin task'}
+                      >
+                        {task.pinned ? '📌' : '📍'}
+                      </button>
+                    )}
                     <button
                       onClick={() => startEdit(task)}
                       className={'px-2 py-1 text-sm rounded-md transition-colors ' + (darkMode ? 'text-primary-400 hover:bg-gray-700' : 'text-primary-600 hover:bg-primary-50')}
