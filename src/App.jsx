@@ -15,6 +15,8 @@ import ConfirmDialog from './components/ConfirmDialog'
 import TrashBin from './components/TrashBin'
 import PinnedTasks from './components/PinnedTasks'
 import OnboardingModal from './components/OnboardingModal'
+import NavBar from './components/NavBar'
+
 
 function App() {
   const { currentUser, isAuthenticated, isLoading, logout, addXp, awardAchievement } = useAuth()
@@ -336,20 +338,23 @@ function App() {
         title={confirmConfig.title}
         message={confirmConfig.message}
         onConfirm={() => { confirmConfig.onConfirm?.(); setConfirmConfig((c) => ({ ...c, isOpen: false })) }}
-        onCancel={() => setConfirmConfig((c) => ({ ...c, isOpen: false }))}
+        onCancel={() => setConfirmConfig((c) => ({ ...c, isOpen: false })) }
         darkMode={darkMode}
       />
+
+      {isAuthenticated && (
+        <NavBar darkMode={darkMode} onToggleDarkMode={toggleDarkMode} currentUser={currentUser} />
+      )}
 
       {/* Header */}
       <header className="text-center mb-8">
         <div className="flex justify-center items-center gap-4 mb-2">
-          <h1 className={`text-4xl font-bold ${darkMode ? 'text-primary-400' : 'text-primary-700'}`}>
+          <h1 className={`text-3xl font-bold bg-gradient-text animate-pulse-slow`}>
             TaskBuddy
           </h1>
-          <DarkModeToggle darkMode={darkMode} onToggle={toggleDarkMode} />
         </div>
         <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-          Your personal task management companion
+          Your personal task management companion ✨
         </p>
       </header>
 
