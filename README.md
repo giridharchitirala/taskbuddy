@@ -9,7 +9,7 @@
 ## 🎯 **Features (20+ Real Production Features)**
 
 ### **Core Task Management**
-- ✅ **User Authentication**: Secure login/signup/logout/password reset (forgot flow)
+- ✅ **User Authentication**: Secure login/signup/logout/**forgot password reset** (full modal flow)
 - ✅ **Private User Data**: 100% isolated tasks per user (localStorage)
 - ✅ **Advanced Tasks**: Subtasks, tags, categories, priority (high/med/low), due dates, recurring (stub)
 - ✅ **Bulk Actions**: Select/complete/delete multiple tasks
