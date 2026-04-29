@@ -9,7 +9,7 @@
 ## 🎯 **Features (20+ Real Production Features)**
 
 ### **Core Task Management**
-- ✅ **User Authentication**: Secure login/signup/logout/**forgot password reset** (full modal flow)
+- ✅ **User Authentication**: Secure login/signup/logout/forgot password reset/**settings & change password** (navbar/settings modal)
 - ✅ **Private User Data**: 100% isolated tasks per user (localStorage)
 - ✅ **Advanced Tasks**: Subtasks, tags, categories, priority (high/med/low), due dates, recurring (stub)
 - ✅ **Bulk Actions**: Select/complete/delete multiple tasks
@@ -19,7 +19,7 @@
 
 ### **Gamification & UX**
 - ✅ **Dashboard**: Stats, XP/levels, daily streaks, 10+ achievement badges
-- ✅ **Responsive Navbar**: Desktop/mobile menu, profile/logout, dark toggle
+- ✅ **Responsive Navbar**: Desktop/mobile menu, **settings/reset pw/pic upload**, logout, dark toggle
 - ✅ **Dark/Light Mode**: Full theme support
 - ✅ **Animations/Polish**: Gradients, glows, emerald/violet/orange palette, smooth transitions
 - ✅ **Toasts/Modals**: Success/warning/error notifications, confirm dialogs
