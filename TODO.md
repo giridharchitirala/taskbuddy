@@ -1,55 +1,33 @@
-# TaskBuddy Major Upgrade - TODO
+# TaskBuddy Enhancement - 20+ Features
+Status: In Progress
 
-## Phase 1: Auth System
-- [x] Create AuthContext with localStorage user management
-- [x] Create LoginPage component
-- [x] Create SignupPage component
-- [x] Update App.jsx with auth routing (login/signup/main)
-- [x] Wrap main.jsx with AuthProvider
-- [x] Make task storage user-specific (taskbuddy-tasks-{userId})
-- [x] Add logout functionality
+## Phase 0: Planning ✅
+- [x] Analyze codebase
+- [x] Create enhancement plan
+- [x] User confirmation
+- [x] Create this TODO.md
 
-## Phase 2: User Dashboard
-- [x] Create UserDashboard component
-- [x] Stats: total tasks, completed, completion rate, active streak
-- [x] Recent activity overview
-- [x] Achievement badges display
-- [x] User profile card
+## Phase 1: Auth + UI Polish (Current) ✅
+- [x] 1. Extend Tailwind config for vibrant colors/gradients
+- [x] 2. UI enhancements: gradients, animations, icons in UserDashboard/TaskList/App (foundation)
+- [x] 3. Add ForgotPasswordModal component
+- [x] 4. Update LoginPage with forgot link/modal
+- [x] 5. Update AuthContext with reset logic (mock)
 
-## Phase 3: Gamification
-- [x] Create StreakTracker component
-- [x] Daily login streak logic
-- [x] Achievement badges system (First Task, Task Master, Early Bird, etc.)
-- [x] XP/Level system
+## Phase 2: Top 5 Features
+- [ ] 6. Task Sharing (share links)
+- [ ] 7. Analytics Chart (UserDashboard)
+- [ ] 8. PWA setup
+- [ ] 9. Recurring Tasks (TaskForm)
+- [ ] 10. Pomodoro Timer (new component)
 
-## Phase 4: Task Enhancements
-- [x] Task templates (quick-add presets)
-- [x] Recurring tasks support
-- [x] Bulk select + bulk actions (complete/delete)
-- [x] Pinned tasks section
-- [x] Task dependencies (blocked by)
-- [x] Task priority reordering
+## Phase 3: 15 More Features
+- [ ] 11-25: Calendar, themes, export, etc.
 
-## Phase 5: Organization & Data
-- [x] Trash/Recycle Bin with restore
-- [x] Archive completed tasks older than X days
-- [x] Custom categories with colors
-- [x] Favorites/pinned tasks
+## Phase 4: Testing & Deploy
+- [ ] Run tests/build
+- [ ] Commit/push for GH Pages update
+- [ ] Links
 
-## Phase 6: UX Improvements
-- [x] Toast notification system
-- [x] Confirm dialog for destructive actions
-- [x] Keyboard shortcuts (Ctrl+N new task, Ctrl+D dark mode, / to search)
-- [x] Onboarding welcome modal for new users
-- [x] Undo/Redo system
-
-## Phase 7: Analytics
-- [x] Productivity stats component
-- [x] Weekly completion chart (visual bar chart)
-- [x] Category breakdown stats
-
-## Phase 8: Polish & Deploy
-- [ ] Test build locally
-- [ ] Commit and push to GitHub
-- [ ] Verify deployment
+**Priority**: Phase 1 → Tests → Deploy
 

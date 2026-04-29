@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import ForgotPasswordModal from './ForgotPasswordModal'
+import { useToast } from '../hooks/useToast'
 
 function LoginPage({ darkMode, onToggleDarkMode }) {
   const [username, setUsername] = useState('')
@@ -7,7 +9,9 @@ function LoginPage({ darkMode, onToggleDarkMode }) {
   const [error, setError] = useState('')
   const [mode, setMode] = useState('login') // login | signup
   const [displayName, setDisplayName] = useState('')
+  const [showForgotModal, setShowForgotModal] = useState(false)
   const { login, signup } = useAuth()
+  const { addToast } = useToast() 
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -97,21 +101,36 @@ function LoginPage({ darkMode, onToggleDarkMode }) {
           </button>
         </form>
 
+        {mode === 'login' && (
+          <button
+            onClick={() => setShowForgotModal(true)}
+            className={`text-sm font-medium underline mt-2 block hover:text-emerald-600 transition-colors ${darkMode ? 'text-emerald-400 hover:text-emerald-300' : 'text-emerald-600 hover:text-emerald-700'}`}
+          >
+            Forgot Password?
+          </button>
+        )}
         <div className="mt-6 text-center">
           <p className={`text-sm ${textMuted}`}>
             {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
               onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError('') }}
-              className="text-primary-600 hover:text-primary-700 font-medium underline"
+              className={`font-medium underline hover:text-violet-600 transition-colors ${darkMode ? 'text-violet-400 hover:text-violet-300' : 'text-violet-600 hover:text-violet-700'}`}
             >
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
           </p>
         </div>
       </div>
+
+      <ForgotPasswordModal
+        isOpen={showForgotModal}
+        onClose={() => setShowForgotModal(false)}
+        darkMode={darkMode}
+      />
     </div>
   )
 }
 
 export default LoginPage
+
 

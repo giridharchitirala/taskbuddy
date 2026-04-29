@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import DarkModeToggle from './DarkModeToggle'
 
-function NavBar({ darkMode, onToggleDarkMode, currentUser }) {
+function NavBar({ darkMode, onToggleDarkMode, currentUser, setShowSettings }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { logout } = useAuth()
 
@@ -23,9 +23,12 @@ function NavBar({ darkMode, onToggleDarkMode, currentUser }) {
           <div className="hidden md:flex items-center space-x-8">
             <a href="#dashboard" className={`font-medium ${hoverClass} px-3 py-2 rounded-lg transition-all ${textMain}`}>Dashboard</a>
             <a href="#tasks" className={`font-medium ${hoverClass} px-3 py-2 rounded-lg transition-all ${textMain}`}>Tasks</a>
-            <a href="#profile" className={`font-medium ${hoverClass} px-3 py-2 rounded-lg transition-all ${textMain}`}>
-              {currentUser?.displayName || 'Profile'}
-            </a>
+            <button 
+              onClick={() => setShowSettings(true)}
+              className={`font-medium ${hoverClass} px-3 py-2 rounded-lg transition-all ${textMain}`}
+            >
+              ⚙️ Settings
+            </button>
             <DarkModeToggle darkMode={darkMode} onToggle={onToggleDarkMode} />
             <button
               onClick={logout}
@@ -56,7 +59,7 @@ function NavBar({ darkMode, onToggleDarkMode, currentUser }) {
             <div className="px-2 pt-2 pb-3 space-y-1">
               <a href="#dashboard" className={`block px-3 py-2 font-medium rounded-lg ${hoverClass} ${textMain}`}>Dashboard</a>
               <a href="#tasks" className={`block px-3 py-2 font-medium rounded-lg ${hoverClass} ${textMain}`}>Tasks</a>
-              <a href="#profile" className={`block px-3 py-2 font-medium rounded-lg ${hoverClass} ${textMain}`}>Profile</a>
+              <button onClick={() => setMobileOpen(false); setShowSettings(true)} className={`block w-full text-left px-3 py-2 font-medium rounded-lg ${hoverClass} ${textMain}`}>⚙️ Settings</button>
               <button
                 onClick={logout}
                 className="w-full text-left px-3 py-2 font-medium rounded-lg bg-orange-600 text-white hover:bg-orange-700"

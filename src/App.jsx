@@ -16,6 +16,8 @@ import TrashBin from './components/TrashBin'
 import PinnedTasks from './components/PinnedTasks'
 import OnboardingModal from './components/OnboardingModal'
 import NavBar from './components/NavBar'
+import SettingsModal from './components/SettingsModal'
+
 
 
 function App() {
@@ -46,6 +48,7 @@ function App() {
   // Confirm dialog
   const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, title: '', message: '', onConfirm: null })
 
+  const [showSettings, setShowSettings] = useState(false)
   const toggleDarkMode = useCallback(() => setDarkMode((prev) => !prev), [setDarkMode])
 
   // Show onboarding for new users after auth loads
@@ -343,8 +346,14 @@ function App() {
       />
 
       {isAuthenticated && (
-        <NavBar darkMode={darkMode} onToggleDarkMode={toggleDarkMode} currentUser={currentUser} />
+        <NavBar darkMode={darkMode} onToggleDarkMode={toggleDarkMode} currentUser={currentUser} setShowSettings={setShowSettings} />
       )}
+      <SettingsModal 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+        darkMode={darkMode} 
+        currentUser={currentUser} 
+      />
 
       {/* Header */}
       <header className="text-center mb-8">

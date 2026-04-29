@@ -121,6 +121,17 @@ export function AuthProvider({ children }) {
     updateUser({ achievements: [...achievements, achievementId] })
   }, [currentUser, updateUser])
 
+  const resetPassword = useCallback((username, newPassword) => {
+    const userKey = username?.trim().toLowerCase()
+    if (!userKey || !newPassword || newPassword.length < 4) {
+      return { success: false, error: 'Invalid username or password (min 4 chars)' }
+    }
+    const user = users[userKey]
+    if (!user) return { success: false, error: 'User not found' }
+    setUsers(prev => ({ ...prev, [userKey]: { ...user, password: newPassword } }))
+    return { success: true }
+  }, [users])
+
   const value = {
     currentUser,
     isAuthenticated: !!currentUser,
@@ -131,6 +142,7 @@ export function AuthProvider({ children }) {
     updateUser,
     addXp,
     awardAchievement,
+    resetPassword,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

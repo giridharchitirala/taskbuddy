@@ -79,7 +79,7 @@ npm run test  # Vitest
 2. `npm test`
 3. Push → auto-deploy
 
-**Built with ❤️ by [giridharchitirala](https://github.com/giridharchitirala) + BLACKBOXAI**
+**Built with ❤️ by [giridharchitirala](https://github.com/giridharchitirala)
 
 ⭐ Star if useful!
 
